@@ -519,6 +519,9 @@ class ExpandablePanel extends StatelessWidget {
 
   /// Builds an Expandable object, optional
   final ExpandableBuilder builder;
+  
+  /// A function that will trigger when toggle
+  final Function onExpand;
 
   /// An optional controller. If not specified, a default controller will be
   /// obtained from a surrounding [ExpandableNotifier]. If that does not exist,
@@ -534,6 +537,7 @@ class ExpandablePanel extends StatelessWidget {
     this.expanded,
     this.controller,
     this.builder,
+    this.onExpand,
     // Theme overrides (optional)
     @deprecated bool tapHeaderToExpand,
     @deprecated bool tapBodyToCollapse,
@@ -631,7 +635,8 @@ class ExpandablePanel extends StatelessWidget {
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           child: widget,
-          onTap: () {
+          onTap: () async {
+            await onExpand();
             final controller = ExpandableController.of(context);
             controller?.toggle();
           },
